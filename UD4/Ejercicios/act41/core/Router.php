@@ -6,28 +6,28 @@ class Router
 
     private $routes = [];
 
-    public function get(string $uri, array $handler)
+    public function get(string $uri, array $handler, array $middlewares = [])
     {
         $this->routes[] = ['method' => 'GET', 'uri' => $uri, 'handler' => $handler];
     }
 
-    public function post(string $uri, array $handler)
+    public function post(string $uri, array $handler, array $middlewares = [])
     {
         $this->routes[] = ['method' => 'POST', 'uri' => $uri, 'handler' => $handler];
     }
 
-    public function put(string $uri, array $handler)
+    public function put(string $uri, array $handler, array $middlewares = [])
     {
         $this->routes[] = ['method' => 'PUT', 'uri' => $uri, 'handler' => $handler];
     }
 
-    public function delete(string $uri, array $handler)
+    public function delete(string $uri, array $handler, array $middlewares = [])
     {
         $this->routes[] = ['method' => 'DELETE', 'uri' => $uri, 'handler' => $handler];
 
     }
 
-    public function dispatch(Request $request)
+    public function dispatch(Request $request, array $middlewares = [])
     {
         // Recorro todos los endpoints declarados
         foreach ($this->routes as $route) {

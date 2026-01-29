@@ -19,6 +19,11 @@ class Request{
         return json_decode($body_text,true) ?? [];
     }
 
+    public function getHeader(string $headerKey){
+        $headers = getallheaders();
+        return $headers[$headerKey];
+    }
+
     public function validate(array $rules) {
         $data = $this->body();
         $errors = [];

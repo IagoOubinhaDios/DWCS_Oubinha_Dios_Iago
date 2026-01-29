@@ -1,4 +1,5 @@
 <?php
+use Ejercicios\act41\Controller\AuthController;
 use Ejercicios\act41\core\Router;
 use Ejercicios\act41\controller\BandaController;
 use Ejercicios\act41\controller\DiscoController;
@@ -21,5 +22,9 @@ $router->put('/discos/{id_disco}/pistas/{num_pista}', [PistaController::class, '
 $router->delete('/bandas/{id_banda}', [BandaController::class, 'destroy']);
 $router->delete('/discos/{id_disco}', [DiscoController::class, 'destroy']);
 $router->delete('/discos/{id_disco}/pistas/{num_pista}', [PistaController::class, 'destroy']);
+
+$router->post('/login', [AuthController::class, 'login']);
+$router->post('/register', [AuthController::class, 'register']);
+$router->get('/autenticado', [AuthController::class, 'validateToken']);
 
 

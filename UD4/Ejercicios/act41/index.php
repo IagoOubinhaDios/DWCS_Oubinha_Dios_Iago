@@ -3,6 +3,9 @@ require_once "globals.php";
 use Ejercicios\act41\core\Request;
 use Ejercicios\act41\core\Router;
 
+// Cargamos configuración 
+$_ENV = parse_ini_file(__DIR__.'/config/.env');
+
 spl_autoload_register(function ($clase) {
 
     $ruta = $_SERVER['DOCUMENT_ROOT'] . '/' . str_replace('\\', '/', $clase) . '.php';

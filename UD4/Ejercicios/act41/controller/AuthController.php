@@ -1,117 +1,86 @@
 <?php
-
-namespace Ejercicios\act41\controller;
+namespace Ejercicios\act41\Controller;
 use Ejercicios\act41\core\Request;
-use Ejercicios\act41\model\BandaModel;
-use Ejercicios\act41\model\vo\BandaVo;
 use Ejercicios\act41\core\Response;
+use Ejercicios\act41\model\UsuarioModel;
+use Ejercicios\act41\model\vo\UsuarioVo;
 use Exception;
-class AuthController
-{
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
+
+class AuthController{
     private Request $request;
+    private $secretKey = "sad98723hjnd0912.si237dh1209dhEHDFRJWI2d2..3";
 
     public function __construct(){
         $this->request = new Request();
     }
 
-    public function index()
-    {
-        try {
-            //Obtener todos los bandas
-            $bandas = BandaModel::getFilter();
-            $json = [];
-            foreach ($bandas as $banda) {
-                $json[] = $banda->toArray();
-            }
-            //Devolver los bandas en formato json (HTTP RESPONSE).
-            Response::json($json, 200);
-        } catch (\Throwable $th) {
-            error_log("BandaController->index()" . $th->getMessage());
-            Response::serverError();
-        }
-    }
-
-    public function show(int $id)
-    {
-        try {
-            $banda = BandaModel::getById($id);
-            if (!isset($banda)) {
-                Response::notFound();
-                return;
-            }
-            Response::json($banda->toArray(), 200);
-        } catch (\Throwable $th) {
-            error_log("BandaController->show()" . $th->getMessage());
-            Response::serverError();
-        }
-    }
-
-    public function store()
-    {
-        try {
-            //Obtener el BandaVo de la petición
-            $this->request->validate([
-                'nombre'=>'required|string|max:100',
-                'num_integrantes'=>'required|int|max:99|min:1',
-                'genero'=>'required|string|max:50',
-                'nacionalidad'=>'string|max:50'
+    public function login(){
+        $this->request->validate([
+            'email'=>'string|required|max:256',
+            'password'=>'string|required|max:256',
             ]);
-            $data = $this->request->body();
-            $banda = BandaVo::fromArray($data);
-            $banda = BandaModel::add($banda);
-            if ($banda === null){
-                throw new Exception("No se ha agregado la banda".implode(',', $data));
-            }
-            //Devolver los bandas en formato json (HTTP RESPONSE).
-            Response::json($banda->toArray(), 201);
-        } catch (\Throwable $th) {
-            error_log("BandaController->store()" . $th->getMessage());
-            Response::serverError();
+        $data = $this->request->body();
+        $user = UsuarioModel::getByEmailPassword($data['email'], $data['password']);
+        if($user ===null){
+            Response::json(['message'=>'No autenticado. Revise credenciales.'],401);
+            return;
         }
+        $token = self::createJwt($user, 3600);
+        Response::json(['token'=> $token], 200);
+
     }
 
-    public function update(int $id)
-    {
-        try {
-            //Obtener el BandaVo de la petición
-            $banda = BandaModel::getById($id);
-            if (!isset($banda)) {
-                Response::notFound();
-                return;
-            }
-            $this->request->validate([
-                'nombre'=>'required|string|max:100',
-                'num_integrantes'=>'required|int|max:99|min:1',
-                'genero'=>'required|string|max:50',
-                'nacionalidad'=>'string|max:50'
+    public function register(){
+        $this->request->validate([
+            'nombre'=>'string|required|max:128',
+            'email'=>'string|required|max:256',
+            'password'=>'string|required|max:256',
             ]);
-            $data = $this->request->body();
-            $banda->updateVoParams(BandaVo::fromArray($data));
-
-            // $banda->setIdBanda($id);
-            if (BandaModel::update($banda)) {
-                throw new Exception("No se ha actualizado la banda".implode(',', $data));
-            }
-            //Devolver los bandas en formato json (HTTP RESPONSE).
-            Response::json($banda->toArray(), 200);
-        } catch (\Throwable $th) {
-            error_log("BandaController->update()" . $th->getMessage());
+        $data = $this->request->body();
+        $usuario = UsuarioVo::fromArray($data);
+        $usuario = UsuarioModel::add($usuario);
+        
+        if($usuario === null){
             Response::serverError();
+            return;
         }
+
+        Response::json($usuario->toArray(),201);
     }
 
-    public function destroy(int $id)
-    {
+    public function validateToken(){
+        $token = $this->request->getHeader('Authorization');
+
+        if(!isset($token)){
+            Response::json(["messaje"=>"Usuario no autenticado."],401);
+            return;
+        }
+
+        $token = str_replace('Bearer ','',$token);
+
         try {
-            if (BandaModel::delete($id)) {
-                Response::json(['mensaje' => "banda $id eliminado."], 200);
-            } else {
-                Response::notFound();
-            }
-        } catch (\Throwable $th) {
-            error_log("BandaController->destroy()" . $th->getMessage());
-            Response::serverError();
+            $payload = JWT::decode($token, new Key($this->secretKey,'HS256'));
+            Response::json(["messaje"=>"Usuario con id $payload->sub e email $payload->email. Autenticado!!"],200);
+        } catch (Exception $th) {
+            Response::json(["messaje"=>"Usuario no autenticado."],401);
         }
+        
+
     }
 
+    private function createJwt(UsuarioVo $vo,  $expireSeconds){
+        
+        $payload = [
+            "sub" => $vo->getId(),
+            "email" => $vo->getEmail(),
+            "iat" => time(),
+            "exp" => time() + $expireSeconds
+        ];
+        
+        $jwt = JWT::encode($payload, $this->secretKey, 'HS256');
+
+        return $jwt;
+    }
 }
