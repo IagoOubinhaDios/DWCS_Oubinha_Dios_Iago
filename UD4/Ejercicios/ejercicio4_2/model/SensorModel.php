@@ -9,8 +9,32 @@ use PDOException;
 class SensorModel extends Model
 {
 
-    public static function get() : array {
-        return [];
+    public static function getFilter(?int $id = null): array {
+        $sensores = [];
+        $sql = "SELECT * FROM sensor WHERE 1=1";
+        $params = [];
+
+        if ($id !== null) {
+            $sql .= " AND casa_id = :id";
+            $params['id'] = $id;
+        }
+        try {
+            $db = self::getConnection();
+            $stm = $db->prepare($sql);
+            foreach ($params as $param => $value) {
+                $stm->bindValue($param, $value);
+            }
+            $stm->execute();
+            foreach ($stm as $row) {
+                $sensores[] = SensorVo::fromArray($row);
+            }
+        } catch (PDOException $th) {
+            error_log("Error obteniendo sensores " . $th->getMessage());
+        } finally {
+            $db = null;
+        }
+
+        return $sensores;
     }
 
     /**

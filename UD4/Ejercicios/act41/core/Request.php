@@ -28,7 +28,7 @@ class Request{
         $data = $this->body();
         $errors = [];
         foreach($rules as $field=>$ruleString){
-            $rulesArray = explode('', $ruleString);
+            $rulesArray = explode('|', $ruleString);
             foreach ($rulesArray as $rule){
                 //Required
                 if ($rule==='required' && !isset($data[$field])) {

@@ -3,12 +3,14 @@
 namespace Ejercicios\ejercicio4_2\core;
 
 use Ejercicios\ejercicio4_2\model\vo\UsuarioVo;
+use Ejercicios\ejercicio4_2\model\vo\SensorVo;
 /**
  * Wrapper del HTTP request.
  */
 class Request
 {
     public ?UsuarioVo $usuario = null;
+    public ?SensorVo $sensor = null;
 
     /**
      * @return $Uri de la pertición HTTP
@@ -46,8 +48,7 @@ class Request
     public function getHeader(string $headerKey):?string
     {
         //TODO
-        $headers = getallheaders();
-        return $headers[$headerKey];
+        return getallheaders()[$headerKey];
     }
 
     /**
@@ -60,7 +61,7 @@ class Request
     public function validate(array $rules)
     {
         //TODO
-        $data = $this->body();
+        /*$data = $this->body();
         $errors = [];
 
         foreach($rules as $field => $rule_string){
@@ -116,6 +117,7 @@ class Request
             Response::json(['message' => 'Datos inválidos', 'errors' => $errors], 400);
             exit;
         }
+            */
     }
 
 

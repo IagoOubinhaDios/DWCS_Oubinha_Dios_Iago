@@ -3,6 +3,7 @@
 namespace Ejercicios\ejercicio4_2\core\middleware;
 use Ejercicios\ejercicio4_2\core\Request;
 use Ejercicios\ejercicio4_2\core\Response;
+use Ejercicios\ejercicio4_2\model\UsuarioModel;
 use Exception;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
@@ -23,7 +24,7 @@ class JwtUserMiddleware implements Middleware{
                 exit;
             }
 
-            Response::json(["messaje"=>"Usuario con id $payload->sub. Autenticado!!"],200);
+            $request->usuario = UsuarioModel::get($payload->sub);
         } catch (Exception $th) {
             Response::json(["messaje"=>"Usuario no autenticado."],401);
         }

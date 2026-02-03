@@ -11,7 +11,20 @@ use Firebase\JWT\JWT;
 class SensorController extends Controller {
 
     public function index() {
-        // $sensores = SensorModel::get();
+        try {
+            //Obtener todos los bandas
+            $usuarioActual = $this->request->usuario;
+            $sensores = SensorModel::getFilter($usuarioActual->getCasaId());
+            $json = [];
+            foreach ($sensores as $sensor) {
+                $json[] = $sensor->toArray();
+            }
+            //Devolver los bandas en formato json (HTTP RESPONSE).
+            Response::json($json, 200);
+        } catch (\Throwable $th) {
+            error_log("SensorController->index()" . $th->getMessage());
+            Response::serverError();
+        }
     }
 
     public function show(string $mac) {
@@ -44,7 +57,7 @@ class SensorController extends Controller {
             }
 
             $data = $sensor->toArray();
-            $data['token'] = self::generateJwt($sensor, 5184000);
+            $data['token'] = self::createJwt($sensor, 5184000);
             Response::json($data, 201);
         } catch(\Throwable $th) {
             error_log("SensorController->store()" . $th->getMessage());
@@ -77,7 +90,7 @@ class SensorController extends Controller {
         }
     }
 
-    private function generateJWT(SensorVo $sensor, int $expireSeconds):string {
+    private function createJWT(SensorVo $sensor, int $expireSeconds):string {
         $payload = [
             "sub" => $sensor->getMac(),
             "iat" => time(),

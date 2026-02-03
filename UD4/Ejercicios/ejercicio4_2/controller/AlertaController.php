@@ -15,11 +15,12 @@ class AlertaController extends Controller {
             $this->request->validate([
                 'sensor_mac'=>'string|max:17'
             ]);
+            $sensorActual = $this->request->sensor;
             $data = $this->request->body();
-            $alerta = AlertaVo::fromArray($data);
-            $alerta = AlertaModel::add($data['sensor_mac']);
+            $alerta = new AlertaVo($data['id'], $sensorActual->getMac());
+            $alerta = AlertaModel::add($sensorActual->getMac());
             if ($alerta == null) {
-                throw new Exception('No se ha agregado el sensor'.implode($data));
+                throw new Exception('No se ha agregado la alerta'.implode($data));
             }
 
             Response::json($alerta->toArray(), 201);
