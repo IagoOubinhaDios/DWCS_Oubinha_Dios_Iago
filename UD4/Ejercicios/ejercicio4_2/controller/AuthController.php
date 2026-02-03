@@ -1,38 +1,28 @@
 <?php
+//TODO
 namespace Ejercicios\ejercicio4_2\controller;
-use Ejercicios\ejercicio4_2\core\Request;
 use Ejercicios\ejercicio4_2\core\Response;
 use Ejercicios\ejercicio4_2\model\UsuarioModel;
 use Ejercicios\ejercicio4_2\model\vo\UsuarioVo;
 use Exception;
 use Firebase\JWT\JWT;
-class AuthController
-{
-
-    private Request $request;
-
-    public function __construct()
-    {
-        $this->request = new Request();
-    }
+class AuthController extends Controller {
     
     public function login()
     {
         try {
             $this->request->validate([
-                'nombre' => 'string|max:50',
-                'apellido1' => 'string|max:50',
-                'apellido2' => 'string|max:50',
                 'email' => 'required|string|max:256',
-                'password' => 'string|max:255',
-                'casa_id' => 'int'
+                'password' => 'required|string|max:255'
             ]);
-            $data = $this->request->body();
-            $user = UsuarioModel::getByEmailPassword($data['email'], $data['password']);
+            $user = $this->request->body();
+            $user = UsuarioModel::getByEmailPassword($user['email'], $user['password']);
             if ($user === null) {
                 Response::json(['message' => 'No autenticado. Revise credenciales.'], 401);
                 return;
             }
+
+            //Devolver el token JWT
             $token = self::createJwt($user, 3600);
             Response::json(['token' => $token], 200);
         } catch (\Throwable $th) {
@@ -43,11 +33,12 @@ class AuthController
 
     private function createJwt(UsuarioVo $vo,  $expireSeconds){
         
+        //Payload para el token JWT
         $payload = [
             "sub" => $vo->getId(),
-            "email" => $vo->getEmail(),
             "iat" => time(),
-            "exp" => time() + $expireSeconds
+            "exp" => time() + $expireSeconds,
+            "rol" => 'user'
         ];
         
         $jwt = JWT::encode($payload, $_ENV['JWT_SECRET_KEY'], $_ENV['JWT_ALGO']);

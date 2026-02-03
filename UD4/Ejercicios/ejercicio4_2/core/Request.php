@@ -15,6 +15,7 @@ class Request
      */
     public function uri(): string
     {
+        //TODO
         return $_SERVER['REQUEST_URI'];
     }
 
@@ -24,6 +25,7 @@ class Request
      */
     public function method(): string
     {
+        //TODO
         return $_SERVER['REQUEST_METHOD'];
     }
 
@@ -33,8 +35,8 @@ class Request
      */
     public function body(): array
     {
-        $body_text = file_get_contents('php://input');
-        return json_decode($body_text, true) ?? [];
+        //TODO
+        return json_decode(file_get_contents('php://input'), true) ?? [];
     }
 
     /**
@@ -43,12 +45,13 @@ class Request
      */
     public function getHeader(string $headerKey):?string
     {
+        //TODO
         $headers = getallheaders();
         return $headers[$headerKey];
     }
 
     /**
-     * Comprueeba si los atributos del JSON que va en el cuerpo de la petición cumplen con las reglas indicadas en $rules.
+     * Comprueba si los atributos del JSON que va en el cuerpo de la petición cumplen con las reglas indicadas en $rules.
      * El formato de $rules es ['atributo_X' => 'regla1|regla2|...|regla_n', ..., 'atributo_Y' => 'regla1|regla2|...|regla_n']
      * Si algun atributo no cumple con sus reglas de validación (HTTP 400) se responde con un error de validación y se corta la ejecución.
      * @param array $rules
@@ -56,6 +59,7 @@ class Request
      */
     public function validate(array $rules)
     {
+        //TODO
         $data = $this->body();
         $errors = [];
 

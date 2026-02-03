@@ -8,6 +8,11 @@ use PDOException;
 
 class SensorModel extends Model
 {
+
+    public static function get() : array {
+        return [];
+    }
+
     /**
      * Obtiene un sensor a partir de su dirección MAC.
      *
@@ -17,7 +22,7 @@ class SensorModel extends Model
      * @param string $mac Dirección MAC del sensor
      * @return SensorVo Objeto SensorVo resultante
      */
-    public static function get(string $mac): ?SensorVo
+    public static function getByMac(string $mac): ?SensorVo
     {
         $sql = 'SELECT mac, localizacion, casa_id FROM sensor WHERE mac = :mac';
         $db = null;

@@ -6,26 +6,26 @@ use Ejercicios\ejercicio4_2\core\Response;
 use Exception;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
-class SensorMiddleware implements Middleware{
+class JwtUserMiddleware implements Middleware{
     public function handle(Request $request) {
         $token = $request->getHeader('Authorization');
         $token = str_replace('Bearer ','',$token);
 
         if(!isset($token)){
-            Response::json(["messaje"=>"Sensor no autenticado."],401);
+            Response::json(["messaje"=>"Usuario no autenticado."],401);
             return;
         }
 
         try {
             $payload = JWT::decode($token, new Key($_ENV['JWT_SECRET_KEY'],$_ENV['JWT_ALGO']));
-            if($payload->rol != 'sensor') {
-                Response::json(["messaje"=>"Token incorrecto para sensor."],401);
+            if($payload->rol != 'user') {
+                Response::json(["messaje"=>"Token incorrecto para usuario."],401);
                 exit;
             }
-            
-            Response::json(["messaje"=>"Sensor con mac $payload->sub. Autenticado!!"],200);
+
+            Response::json(["messaje"=>"Usuario con id $payload->sub. Autenticado!!"],200);
         } catch (Exception $th) {
-            Response::json(["messaje"=>"Sensor no autenticado."],401);
+            Response::json(["messaje"=>"Usuario no autenticado."],401);
         }
     }
 }

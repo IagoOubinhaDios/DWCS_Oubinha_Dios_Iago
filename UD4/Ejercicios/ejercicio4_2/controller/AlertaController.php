@@ -1,4 +1,5 @@
 <?php
+//TODO
 namespace Ejercicios\ejercicio4_2\controller;
 use Ejercicios\ejercicio4_2\core\Request;
 use Ejercicios\ejercicio4_2\core\Response;
@@ -6,14 +7,8 @@ use Ejercicios\ejercicio4_2\model\AlertaModel;
 use Ejercicios\ejercicio4_2\model\vo\AlertaVo;
 use Exception;
 
-class AlertaController {
+class AlertaController extends Controller {
     
-    private Request $request;
-
-    public function __construct()
-    {
-        $this->request = new Request();
-    }
 
     public function store() {
         try {
