@@ -12,7 +12,7 @@ class PistaVo implements Vo
         ?int $idDisco,
         ?int $numero,
         string $titulo,
-        ?int $duracion
+        ?int $duracion = null
     ) {
         $this->idDisco = $idDisco;
         $this->numero = $numero;

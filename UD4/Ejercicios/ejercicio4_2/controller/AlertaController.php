@@ -1,7 +1,6 @@
 <?php
 //TODO
 namespace Ejercicios\ejercicio4_2\controller;
-use Ejercicios\ejercicio4_2\core\Request;
 use Ejercicios\ejercicio4_2\core\Response;
 use Ejercicios\ejercicio4_2\model\AlertaModel;
 use Ejercicios\ejercicio4_2\model\vo\AlertaVo;
@@ -12,9 +11,6 @@ class AlertaController extends Controller {
 
     public function store() {
         try {
-            $this->request->validate([
-                'sensor_mac'=>'string|max:17'
-            ]);
             $sensorActual = $this->request->sensor;
             $data = $this->request->body();
             $alerta = new AlertaVo($data['id'], $sensorActual->getMac());

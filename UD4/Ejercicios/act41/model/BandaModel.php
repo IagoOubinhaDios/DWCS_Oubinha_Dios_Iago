@@ -103,10 +103,10 @@ class BandaModel extends Model
         try {
             $db = self::getConnection();
             $stm = $db->prepare($sql);
-            $params = $vo->toArray();
-            foreach ($params as $param => $value) {
-                $stm->bindValue($param, $value);
-            }
+            $stm->bindValue(":nombre", $vo->getNombre(), PDO::PARAM_STR);
+            $stm->bindValue(":num_integrantes", $vo->getNum_integrantes(), PDO::PARAM_INT);
+            $stm->bindValue(":genero", $vo->getGenero(), PDO::PARAM_STR);
+            $stm->bindValue(":nacionalidad", $vo->getNacionalidad(), PDO::PARAM_STR);
             $resultado = $stm->execute();
             $resultado = $resultado && $stm->rowCount() == 1;
         } catch (PDOException $th) {

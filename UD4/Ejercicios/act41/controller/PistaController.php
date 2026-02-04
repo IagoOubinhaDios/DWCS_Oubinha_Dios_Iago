@@ -48,17 +48,16 @@ class PistaController
         }
     }
 
-    public function store()
+    public function store(int $idDisco)
     {
         try {
             //Obtener el PistaVo de la petición
             $this->request->validate([
                 'numero'=>'required|numeric',
-                'titulo'=>'required|string|max:100',
-                'duracion'=>'numeric'
+                'titulo'=>'required|string|max:100'
             ]);
             $data = $this->request->body();
-            $pista = PistaVo::fromArray($data);
+            $pista = new PistaVo($idDisco, $data['numero'], $data['titulo'], null);
             $pista = PistaModel::add($pista);
             if ($pista === null){
                 throw new Exception("No se ha agregado la pista".implode(',', $data));
@@ -82,9 +81,7 @@ class PistaController
                 return;
             }
             $this->request->validate([
-                'numero'=>'required|numeric',
-                'titulo'=>'required|string|max:100',
-                'duracion'=>'numeric'
+                'titulo'=>'required|string|max:100'
             ]);
             $data = $this->request->body();
             $pista->updateVoParams(PistaVo::fromArray($data));
@@ -106,7 +103,7 @@ class PistaController
     {
         try {
             if (PistaModel::delete($id, $num)) {
-                Response::json(['mensaje' => "pista $id eliminado."], 200);
+                Response::json(['mensaje' => "pista $num eliminado."], 200);
             } else {
                 Response::notFound();
             }

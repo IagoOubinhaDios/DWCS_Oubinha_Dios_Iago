@@ -88,17 +88,13 @@ class PistaModel extends Model
     {
         $resultado = false;
         $sql = "UPDATE pista
-                SET titulo = :titulo,
-                    duracion = :duracion
+                SET titulo = :titulo
                 WHERE id_disco = :id_disco
                   AND numero = :numero";
         try {
             $db = self::getConnection();
             $stm = $db->prepare($sql);
-            $params = $vo->toArray();
-            foreach ($params as $param => $value) {
-                $stm->bindValue($param, $value);
-            }
+            $stm->bindValue(":titulo", $vo->getTitulo(), PDO::PARAM_STR);
             $resultado = $stm->execute();
             $resultado = $resultado && $stm->rowCount() == 1;
         } catch (PDOException $th) {

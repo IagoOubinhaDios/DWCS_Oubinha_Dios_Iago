@@ -10,14 +10,18 @@ class DiscoModel extends Model
 {
     public static function add(DiscoVo $vo): ?DiscoVo
     {
-        $sql = "INSERT INTO disco (titulo, anho, id_banda)
-                VALUES (:titulo, :anho, :id_banda)";
+        $sql = "INSERT INTO disco (id, titulo, anho, id_banda)
+                VALUES (:id, :titulo, :anho, :id_banda)";
         try {
             $db = self::getConnection();
-            $stm = $db->prepare($sql);
-            $stm->execute($vo->toArray());
-            $disco_id = (int)$db->lastInsertId();
-            $vo->setIdBanda($disco_id);
+            $stmt = $db->prepare($sql);
+            $stmt->bindValue(':id', $vo->getIdDisco(), PDO::PARAM_INT);
+            $stmt->bindValue(':titulo', $vo->getTitulo(), PDO::PARAM_STR);
+            $stmt->bindValue(':anho', $vo->getAnho(), PDO::PARAM_INT);
+            $stmt->bindValue(':id_banda', $vo->getIdBanda(), PDO::PARAM_INT);
+            $stmt->execute();
+            $result = $vo;
+            $result->setIdDisco((int)$db->lastInsertId());
         } catch (PDOException $th) {
             error_log("Error agregando disco: " . $th->getMessage());
             $vo = null;
@@ -25,7 +29,7 @@ class DiscoModel extends Model
             $db = null;
         }
 
-        return $vo;
+        return $result;
     }
 
     public static function getById(int $id): ?DiscoVo

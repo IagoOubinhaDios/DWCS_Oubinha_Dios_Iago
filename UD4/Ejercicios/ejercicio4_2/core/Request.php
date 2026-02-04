@@ -61,7 +61,7 @@ class Request
     public function validate(array $rules)
     {
         //TODO
-        /*$data = $this->body();
+        $data = $this->body();
         $errors = [];
 
         foreach($rules as $field => $rule_string){
@@ -93,7 +93,7 @@ class Request
 
                 //Mayor que tamaño maximo
                 if (str_starts_with($rule, 'max')) {
-                    $max = (int) explode(':', $rule[1]);
+                    $max = (int) explode(':', $rule)[1];
                     $dataLength = is_string($data[$field]) ? strlen($data[$field]) : $data[$field];
                     if (isset($data[$field]) && $dataLength > $max) {
                         $errors[$field][] = "El campo es mayor que el tamaño máximo permitido";
@@ -103,7 +103,7 @@ class Request
 
                 //Menor que tamaño minimo
                 if (str_starts_with($rule, 'min')) {
-                    $min = (int) explode(':', $rule[1]);
+                    $min = (int) explode(':', $rule)[1];
                     $dataLength = is_string($data[$field]) ? strlen($data[$field]) : $data[$field];
                     if (isset($data[$field]) && $dataLength < $min) {
                         $errors[$field][] = "El campo es menor que el tamaño mínimo permitido";
@@ -117,7 +117,7 @@ class Request
             Response::json(['message' => 'Datos inválidos', 'errors' => $errors], 400);
             exit;
         }
-            */
+
     }
 
 

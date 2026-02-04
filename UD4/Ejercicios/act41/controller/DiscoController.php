@@ -49,17 +49,16 @@ class DiscoController
         }
     }
 
-    public function store()
+    public function store(int $idBanda)
     {
         try {
             //Obtener el discoVo de la petición
             $this->request->validate([
                 'titulo'=>'required|string|max:100',
-                'anho'=>'required|numeric',
-                'id_banda'=>'required|int'
+                'anho'=>'required|numeric'
             ]);
             $data = $this->request->body();
-            $disco = discoVo::fromArray($data);
+            $disco = new DiscoVo( $data['titulo'], $data['anho'], $idBanda);
             $disco = DiscoModel::add($disco);
             if ($disco === null){
                 throw new Exception("No se ha agregado la disco".implode(',', $data));
@@ -84,7 +83,7 @@ class DiscoController
             $this->request->validate([
                 'titulo'=>'required|string|max:100',
                 'anho'=>'required|numeric',
-                'id_banda'=>'required|int'
+                'id_banda'=>'required'
             ]);
             $data = $this->request->body();
             $disco->updateVoParams(discoVo::fromArray($data));

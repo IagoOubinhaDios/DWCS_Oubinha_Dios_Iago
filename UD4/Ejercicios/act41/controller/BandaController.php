@@ -79,12 +79,12 @@ class BandaController
                 Response::notFound();
                 return;
             }
-            $this->request->validate([
+            /*$this->request->validate([
                 'nombre'=>'required|string|max:100',
                 'num_integrantes'=>'required|int|max:99|min:1',
                 'genero'=>'required|string|max:50',
                 'nacionalidad'=>'string|max:50'
-            ]);
+            ]);*/
             $data = $this->request->body();
             $banda->updateVoParams(BandaVo::fromArray($data));
 

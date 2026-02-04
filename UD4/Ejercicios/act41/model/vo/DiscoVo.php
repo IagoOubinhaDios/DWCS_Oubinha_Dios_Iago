@@ -4,15 +4,15 @@ namespace Ejercicios\act41\model\vo;
 class DiscoVo implements Vo
 {
     private ?int $idDisco;
-    private string $titulo;
+    private ?string $titulo;
     private ?int $anho;
     private ?int $idBanda;
 
     public function __construct(
-        ?int $idDisco,
-        string $titulo,
-        ?int $anho,
-        ?int $idBanda
+        ?int $idDisco = null,
+        ?string $titulo = null,
+        ?int $anho = null,
+        ?int $idBanda = null
     ) {
         $this->idDisco = $idDisco;
         $this->titulo = $titulo;

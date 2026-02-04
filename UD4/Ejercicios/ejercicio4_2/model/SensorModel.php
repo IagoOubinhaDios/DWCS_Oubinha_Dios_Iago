@@ -9,14 +9,18 @@ use PDOException;
 class SensorModel extends Model
 {
 
-    public static function getFilter(?int $id = null): array {
+    public static function getFilter(/*?string $localizacion = null,*/ ?int $casaId = null): array {
         $sensores = [];
         $sql = "SELECT * FROM sensor WHERE 1=1";
         $params = [];
 
-        if ($id !== null) {
+        /*if ($localizacion !== null) {
+            $sql .= " AND localizacion = :localizacion";
+            $params['localizacion'] = $localizacion;
+        }*/
+        if ($casaId !== null) {
             $sql .= " AND casa_id = :id";
-            $params['id'] = $id;
+            $params['id'] = $casaId;
         }
         try {
             $db = self::getConnection();

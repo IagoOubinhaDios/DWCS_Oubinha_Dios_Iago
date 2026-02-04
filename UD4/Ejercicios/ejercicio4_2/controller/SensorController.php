@@ -29,13 +29,20 @@ class SensorController extends Controller {
 
     public function show(string $mac) {
         try {
-            $sensor = SensorModel::getByMac($mac);
+            $sensor = $this->request->sensor;
             if ($sensor === null) {
                 Response::notFound();
                 return;
             }
 
-            Response::json($sensor->toArray(), 200);
+            if ($sensor->getMac() != $mac) {
+                Response::json(["error"=>"Acceso no autorizado"], 403);
+                return;
+            }
+
+            $data = $sensor->toArray();
+            $data['token'] = self::createJwt($sensor, 5184000);
+            Response::json($data, 200);
         } catch (\Throwable $th) {
             error_log("SensorController->show() " . $th->getMessage());
             Response::serverError();
@@ -68,8 +75,7 @@ class SensorController extends Controller {
     public function update(string $mac) {
         try {
             $this->request->validate([
-                'localizacion'=>'string|max:50',
-                'casa_id'=>'int'
+                'localizacion'=>'string|max:50'
             ]);
             $data = $this->request->body();
 
@@ -77,6 +83,11 @@ class SensorController extends Controller {
             if ($sensor == null) {
                 Response::notFound();
                 exit;
+            }
+
+            if ($this->request->usuario->getCasaId() != $sensor->getCasaId()) {
+                Response::json(["error" => "Acceso no autorizado"], 403);
+                return;
             }
 
             $sensor->updateVoParams(SensorVo::fromArray($data));

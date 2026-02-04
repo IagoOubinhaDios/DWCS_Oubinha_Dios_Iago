@@ -1,5 +1,4 @@
 <?php
-require_once "globals.php";
 use Ejercicios\act41\core\Request;
 use Ejercicios\act41\core\Router;
 

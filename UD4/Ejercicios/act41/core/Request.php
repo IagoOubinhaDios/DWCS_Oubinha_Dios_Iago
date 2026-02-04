@@ -1,6 +1,7 @@
 <?php
 
 namespace Ejercicios\act41\core;
+use Ejercicios\act41\model\vo\BandaVo;
 /**
  * Wrapper del HTTP request.
  */
@@ -42,7 +43,7 @@ class Request{
                     continue;
                 }
 
-                if ($rule==='int' && isset($data[$field]) && !is_int($data[$field])) {
+                if ($rule==='int' && isset($data[$field]) && !is_int((int)$data[$field])) {
                     $errors[$field][] = "Campo debe ser un entero";
                     continue;
                 }

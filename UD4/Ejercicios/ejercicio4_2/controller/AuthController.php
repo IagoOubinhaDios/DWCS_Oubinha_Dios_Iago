@@ -18,7 +18,7 @@ class AuthController extends Controller {
             $user = $this->request->body();
             $user = UsuarioModel::getByEmailPassword($user['email'], $user['password']);
             if ($user === null) {
-                Response::json(['message' => 'No autenticado. Revise credenciales.'], 401);
+                Response::json(['error' => 'No autenticado. Revise credenciales.'], 401);
                 return;
             }
 
