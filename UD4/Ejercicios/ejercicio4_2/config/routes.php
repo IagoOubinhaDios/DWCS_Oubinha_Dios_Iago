@@ -13,3 +13,4 @@ $router->post('/sensores', [SensorController::class, 'store'], [JwtUserMiddlewar
 $router->get('/sensores/{mac}', [SensorController::class, 'show'], [SensorMiddleware::class]);
 $router->put('/sensores/{mac}', [SensorController::class, 'update'], [JwtUserMiddleware::class]);
 $router->post('/alerta', [AlertaController::class, 'store'], [SensorMiddleware::class]);
+$router->delete('/sensores/{mac}', [SensorController::class, 'destroy'], [JwtUserMiddleware::class]);

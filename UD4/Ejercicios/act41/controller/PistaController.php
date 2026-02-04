@@ -74,7 +74,6 @@ class PistaController
     {
         try {
             //Obtener el PistaVo de la petición
-            $request = new Request();
             $pista = PistaModel::getById($id, $num);
             if (!isset($pista)) {
                 Response::notFound();

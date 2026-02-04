@@ -22,8 +22,16 @@ class AuthController extends Controller {
                 return;
             }
 
+            $payload = [
+                'sub' => $user->getId(),
+                'iat' => time(),
+                'exp' => time() + 3600,
+                'rol' => 'user'
+            ];
+
+            $token = JWT::encode($payload, $_ENV['JWT_SECRET_KEY'],$_ENV['JWT_ALGO']);
             //Devolver el token JWT
-            $token = self::createJwt($user, 3600);
+            // $token = self::createJwt($user, 3600);
             Response::json(['token' => $token], 200);
         } catch (\Throwable $th) {
             error_log("AuthController->login()" . $th->getMessage());

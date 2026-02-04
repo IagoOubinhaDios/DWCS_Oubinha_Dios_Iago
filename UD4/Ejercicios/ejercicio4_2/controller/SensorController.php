@@ -101,6 +101,19 @@ class SensorController extends Controller {
         }
     }
 
+    public function destroy(string $mac) {
+        try {
+            if (SensorModel::delete($mac)) {
+                Response::json(["message" => "Sensor $mac eliminado"], 200);
+            } else {
+                Response::notFound();
+            }
+        }catch(\Throwable $th) {
+            error_log('Ha ocurrido un error ' . $th->getMessage());
+            Response::serverError();
+        }
+    }
+
     private function createJWT(SensorVo $sensor, int $expireSeconds):string {
         $payload = [
             "sub" => $sensor->getMac(),
