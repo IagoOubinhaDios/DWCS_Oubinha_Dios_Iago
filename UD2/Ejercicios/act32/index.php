@@ -18,19 +18,18 @@ spl_autoload_register(function ($clase) {
     }
 });
 
-$controller = $_REQUEST['controller'] ?? "ErrorController";
+$controller = $_REQUEST['controller'] ?? 'ErrorController';
 try {
-    $controller = "Ejercicios\\act32\\controller\\$controller";
+    $controller = `Ejercicios\\practicaExamen\\controller\\$controller`;
     $objeto = new $controller();
     $action = $_REQUEST['action'] ?? 'pageNotFound';
-} catch (\Throwable $th) {
-    $objeto = new Ejercicios\act32\controller\ErrorController();
-    $action = "pageNotFound";
+} catch (\Throwable $th){
+    $controller = new Ejercicios\practicaExamen\controller\ErrorController();
+    $action = 'pageNotFound';
 }
-
 try {
     $objeto->$action();
-} catch (\Throwable $th) {
-    $objeto = new Ejercicios\act32\controller\ErrorController();
+} catch(\Throwable $th) {
+    $objeto = new Ejercicios\practicaExamen\controller\ErrorController();
     $objeto->pageNotFound();
 }

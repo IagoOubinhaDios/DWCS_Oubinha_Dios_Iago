@@ -29,7 +29,7 @@ class ClienteController extends Controller
                 $cliente->getTelefono() == 0 || $cliente->getMail() == '') {
                 $this->vista->showView("formulario_add_cliente");
             } else if (!ClienteModel::addCliente($cliente)) {
-                throw new Exception("Error agregando cliente: ");
+                throw new Exception("Error agregando cliente.");
             } else{
                 $this->vista->showView("add_cliente");
             }
