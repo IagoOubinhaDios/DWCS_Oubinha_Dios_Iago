@@ -84,8 +84,6 @@ class ProvinciaModel extends Model
                 (cod_provincia, nombre, cod_capital)
                 VALUES 
                 (:cod_provincia, :nombre, :cod_capital)";
-        $id = false;
-
 
 
         try {
@@ -99,23 +97,20 @@ class ProvinciaModel extends Model
             $stmt->bindValue(":cod_provincia", $vo->getCodProvincia(), PDO::PARAM_INT);
             $stmt->bindValue(":nombre", $vo->getNombre());
             $stmt->bindValue(":cod_capital", $vo->getCodCapital(), PDO::PARAM_INT);
-
-            if ($stmt->execute()) {
-                $id = $vo->getCodProvincia();
-            }
-        } catch (Exception $th) {
+            $result = $stmt->execute();
+        } catch (PDOException $th) {
             error_log("Error agregando provincia: " . $th->getMessage());
         } finally {
             $db = null;
         }
 
-        return $id ? self::getProvincia($id) : false;
+        return $result ? self::getProvincia($vo->getCodProvincia()) : false;
     }
 
     /**
      * Elimina una provincia.
      */
-    public static function delete(int $id): bool
+    public static function delete(ProvinciaVo $vo): bool
     {
         $sql = "DELETE FROM provincia WHERE cod_provincia = :id";
         $result = false;
@@ -124,7 +119,7 @@ class ProvinciaModel extends Model
             $db = self::getConnection();
 
             $stmt = $db->prepare($sql);
-            $stmt->bindValue(":id", $id, PDO::PARAM_INT);
+            $stmt->bindValue(":id", $vo->getCodProvincia(), PDO::PARAM_INT);
 
             $result = $stmt->execute();
         } catch (PDOException $th) {

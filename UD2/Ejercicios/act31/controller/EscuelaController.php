@@ -34,8 +34,9 @@ class EscuelaController extends Controller
     {
 
         try {
-            $escuela = new EscuelaVO();
-            $escuela->setCodEscuela($_REQUEST['cod_escuela'] ?? '');
+            // $escuela = new EscuelaVO();
+            // $escuela->setCodEscuela($_REQUEST['cod_escuela'] ?? '');
+            $escuela = EscuelaModel::getEscuela($_REQUEST['cod_escuela']);
             if (!EscuelaModel::deleteEscuela($escuela)) {
                 throw new Exception("Error agregando escuela: ");
             }
