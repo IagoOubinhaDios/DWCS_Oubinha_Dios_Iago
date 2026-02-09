@@ -16,7 +16,6 @@ class ClienteController extends Controller
         }
     }
 
-
     public function addCliente()
     {
         try {
@@ -37,6 +36,36 @@ class ClienteController extends Controller
         } catch (\Throwable $th) {
             error_log($th->getMessage());
             $this->vista->showView("error_add_cliente");
+        }
+    }
+
+    public function updateCliente() {
+        try {
+            $cliente = new ClienteVO();
+            $cliente->setNombre($_REQUEST['nombre'] ?? '');
+            $cliente->setApellidos($_REQUEST['apellidos'] ?? '');
+            $cliente->setTelefono(is_numeric($_REQUEST['telefono']) ? $_REQUEST['telefono'] : 0);
+            $cliente->setMail($_REQUEST['mail'] ?? '');
+            if (!ClienteModel::updateCliente($cliente)) {
+                throw new Exception('Error al modificar cliente: ');
+            } else {
+                $this->vista->showView('update_cliente');
+            }
+        } catch (\Throwable $th) {
+            error_log($th->getMessage());
+            $this->vista->showView('error_update_cliente');
+        }
+    }
+
+    public function deleteCliente() {
+        try {
+            $cliente = ClienteModel::getCliente($_REQUEST['cod_cliente']);
+            if (!ClienteModel::deleteCliente($cliente)) {
+                throw new Exception('No se pudo eliminar el cliente.');
+            }
+        } catch(\Throwable $th) {
+            error_log($th->getMessage());
+            $this->vista->showView('error_delete_cliente');
         }
     }
 }

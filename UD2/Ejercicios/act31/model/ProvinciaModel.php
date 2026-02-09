@@ -123,7 +123,7 @@ class ProvinciaModel extends Model
 
             $result = $stmt->execute();
         } catch (PDOException $th) {
-            error_log("Error eliminando provincia cod=$id: " . $th->getMessage());
+            error_log("Error eliminando provincia: " . $th->getMessage());
         } finally {
             $db = null;
         }

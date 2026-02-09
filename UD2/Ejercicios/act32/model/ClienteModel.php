@@ -50,6 +50,54 @@ class ClienteModel extends Model{
         return $resultado;
     }
 
+    public static function deleteCliente(ClienteVO $vo): bool
+    {
+        $sql = 'DELETE FROM cliente WHERE cod_cliente = :id';
+        $result = false;
+
+        try {
+            $db = self::getConnection();
+            $stmt = $db->prepare($sql);
+            $stmt->bindValue(':id', $vo->getCodCliente(), PDO::PARAM_INT);
+            $result = $stmt->execute();
+        } catch(PDOException $th) {
+            error_log('Error al eliminar cliente: ' . $th->getMessage());
+        } finally {
+            $db = null;
+        }
+
+        return $result;
+    }
+
+    public static function updateCliente(ClienteVO $vo): ClienteVO|null
+    {
+        $sql = 'UPDATE cliente 
+            SET nombre = :nombre,
+                apellidos = :apellidos,
+                telefono = :telefono,
+                mail = :mail
+                WHERE cod_cliente = :cod_cliente';
+        $result = false;
+
+        try {
+            $db = self::getConnection();
+            $stmt = $db->prepare($sql);
+            $stmt->bindValue(':nombre', $vo->getNombre(), PDO::PARAM_STR);
+            $stmt->bindValue(':apellidos', $vo->getApellidos(), PDO::PARAM_STR);
+            $stmt->bindValue(':telefono', $vo->getTelefono(), PDO::PARAM_INT);
+            $stmt->bindValue(':mail', $vo->getMail(), PDO::PARAM_STR);
+            $stmt->bindValue(':cod_cliente', $vo->getCodCliente(), PDO::PARAM_INT);
+
+            $result = $stmt->execute();
+        } catch (PDOException $th) {
+            error_log('Error al modificar cliente ' . $th->getMessage());
+        } finally {
+            $db = null;
+        }
+
+        return $result ? self::getCliente($vo->getCodCliente()) : null;
+    }
+
     private static function rowToVO(array $row): ClienteVO
     {
         return new ClienteVO(

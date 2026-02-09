@@ -12,6 +12,8 @@
         <li><a href="http://localhost/Ejercicios/act32/index.php?controller=ClienteController&action=listarClientes">Listar clientes</a></li>
         <li><a href="http://localhost/Ejercicios/act32/index.php?controller=ProductoController&action=addProducto">Añadir producto</a></li>
         <li><a href="http://localhost/Ejercicios/act32/index.php?controller=ClienteController&action=addCliente">Añadir cliente</a></li>
+        <li><a href="http://localhost/Ejercicios/act32/index.php?controller=ProductoController&action=deleteProducto">Borrar producto</a></li>
+        <li><a href="http://localhost/Ejercicios/act32/index.php?controller=ClienteController&action=deleteCliente">Borrar producto</a></li>
     </ul>
 </body>
 </html>
